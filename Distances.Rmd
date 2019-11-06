@@ -7,17 +7,19 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+rm(list=ls())
+library(sp)
+library(rgeos)
+library(rgdal)
+library(tidyverse)
+
 ```
 
 ## R Markdown
 
 
 ```{r cars}
-rm(list=ls())
-library(sp)
-library(rgeos)
-library(rgdal)
-library(tidyverse)
+
 
 ```
 
