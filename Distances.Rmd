@@ -1,0 +1,88 @@
+---
+title: "Distances"
+author: "Luis A. Escobedo"
+date: "11/5/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+
+```{r cars}
+rm(list=ls())
+library(sp)
+library(rgeos)
+library(rgdal)
+library(tidyverse)
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r Loading Data, include = FALSE}
+
+setwd("/Users/luchoescobedo/Documents/WORK/Projects/SpatialFunctions/")
+locations <- read.csv("SubSample.csv")
+
+head(locations)
+str(locations)
+
+```
+
+
+```{r Transforming data, echo=FALSE, include = FALSE}
+
+# Reading the data
+xy <- locations[,c(2,3)]
+
+locations_spdf <- SpatialPointsDataFrame(coords = xy, 
+                                         data = locations,
+                                         proj4string = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
+
+locations_spdf_utm <- spTransform(locations_spdf,
+                                  CRS = "+init=epsg:32718 +proj=utm +zone=18 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
+
+
+# Splitting the data
+competitor <- locations_spdf_utm[locations_spdf_utm$class == "Competitor",]
+client <- locations_spdf_utm[locations_spdf_utm$class == "Client",]
+
+
+```
+
+
+
+```{r Distance function}
+## Function: Distances between different entities ##
+nneigh <- function(entity1, entity2) {
+  dist <- gDistance(entity2[, 1], entity1[, 1], byid = T)
+  dist_min <- apply(dist, 1, function(x) order(x, decreasing = F)[1])
+  df <- cbind(entity1[, 1], entity2[, 1][dist_min,], apply(dist, 1, function(x) sort(x, decreasing=F)[1]))
+  colnames(df@data) <- c("from_id", "to_id", "distance")
+  df <- df@data
+  return(df)
+}
+
+client_dist <- nneigh2(client, competitor)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

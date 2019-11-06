@@ -70,36 +70,7 @@ competitors_count <- count_in_buffer(competitor, buffers)
 
 ```
 
-```{r Distance function}
 
-# ## Function: Nearest Neighbor distance between bodegas ##
-# nneigh <- function(spfilename) {
-#   sptempfile <- gDistance(spfilename[,1], byid = T)
-#   sptempfile_min <- apply(sptempfile, 1, function(x) order(x, decreasing = F)[2])
-#   sptempfile_dat <- cbind(spfilename[, 1], spfilename[, 1][sptempfile_min,], apply(sptempfile, 1, function(x) sort(x, decreasing=F)[2]))
-#   colnames(sptempfile_dat@data) <- c("from_id", "to_id", "distance")
-#   temp_nn1 <- sptempfile_dat@data
-#   #temp_med <- median(temp_nn1$distance) # use it instead of the previous one if you want to get the median distance
-#   return(temp_nn1)
-# }
-
-## Function: Distances between bodegas and competitors ##
-nneigh2 <- function(entity1, entity2) {
-        
-  dist <- gDistance(entity2[, 1], entity1[, 1], byid = T)
-  dist_min <- apply(dist, 1, function(x) order(x, decreasing = F)[1])
-  df <- cbind(entity1[, 1], entity2[, 1][dist_min,], apply(dist, 1, function(x) sort(x, decreasing=F)[1]))
-  colnames(df@data) <- c("from_id", "to_id", "distance")
-  df <- df@data
-  return(df)
-}
-
-client_dist <- nneigh2(client, client)
-
-gDistance(client)
-
-
-```
 
 
 
