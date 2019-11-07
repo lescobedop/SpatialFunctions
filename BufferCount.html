@@ -436,9 +436,8 @@ ggplot(client, aes(colour = class)) +
   }</code></pre>
 <p>The result of this function is be a data frame showing the id of the client’s buffer and the number of competitors that store has at 50 meters distance. The graph is showing only the buffers with competitors within 50 meters. On a side note, there is also room for client’s store consolidation.</p>
 <pre class="r"><code>competitors_count &lt;- count_in_buffer(buffers, competitor)
-class(competitors_count)</code></pre>
-<pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
-<pre class="r"><code>buffer_ids &lt;- competitors_count$id
+
+buffer_ids &lt;- competitors_count$id
 
 buffers_ss &lt;- buffers[buffers$id %in% buffer_ids, ]
 
