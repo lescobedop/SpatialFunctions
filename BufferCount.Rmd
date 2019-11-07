@@ -1,5 +1,5 @@
 ---
-title: "Distance and Counts"
+title: "Counting spatial entites in R"
 author: "Luis A. Escobedo"
 date: "11/5/2019"
 output: html_document
@@ -11,19 +11,36 @@ knitr::opts_chunk$set(echo = TRUE)
 rm(list=ls())
 
 library(sf)
-library(tidyverse)
-library(rgeos)
-library(rgdal)
+library(dplyr)
+library(ggplot2)
+#library(rgeos)
+#library(rgdal)
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+
 
 ```
 
-## R Markdown
+# Introduction
 
-```{r Loading Data, include = FALSE}
+Most of my work as a data scientist has been dedicated to marketing and sales projects. Almost always, I relied on geocomputation to create out-of-the-box features that help me explain customers and product behavior.
+
+Here is an example from the real world. I remember a question -more like a confession- coming from a senior member of the client's team: *"We would like to know how many competitors do our stores have between 1-5 kilometers?"*. I did the counts, and end up including this and other calculations in my models. Also I found out that there was a lot of room for store consolidation, and that led to another different project.
+
+To summarize, it was not the first and only time I received this question (or its *distance* variation), but actually recieved it **countless** of times. It may sound very familiar to me because of my background, but from my experience most of the time the reader will find that knowing how to deal with geographic data is very useful. Let's start!
+
+
+## Loading the data
+
+The fictional data is called `LocationsStores.csv`. It has 39 stores, all with information regarding size in terms of number of employees and the average monthly sales. 
+
+```{r Loading Data, include = TRUE}
 
 setwd("/Users/luchoescobedo/Documents/WORK/Projects/SpatialFunctions/")
-locations <- read.csv("SubSample.csv")
+locations <- read.csv("LocationStores.csv")
 
+dim(locations)
 head(locations)
 str(locations)
 
@@ -34,6 +51,19 @@ str(locations)
 
 # Reading the data
 locations_sf <- st_as_sf(locations, coords = c("lon", "lat"), crs = "+init=epsg:4326")
+
+# Plot the map
+ggplot(locations, aes(colour = class, size = employees, shape = class)) + 
+  geom_sf(data = locations_sf) +
+  labs(title = "Stores location" ,
+       subtitle = "Clients and Competitors",
+        x ="Longitude", y = "Latitude") +
+  theme(legend.position = "none",
+        axis.text.x  = element_text(size = 6),
+        axis.text.y  = element_text(size = 6))
+
+  
+ 
 locations_sf_utm <- st_transform(locations_sf, 32718)
 
 # Splitting the data
