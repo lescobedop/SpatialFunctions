@@ -22,7 +22,7 @@ library(dplyr)
 
 ```{r Data}
 setwd("/Users/luchoescobedo/Documents/WORK/Projects/SpatialFunctions/")
-locations <- read.csv("SubSample.csv")
+locations <- read.csv("LocationStores.csv")
 locations_ss <- locations %>% select(id, lon, lat) %>% 
         rename(name = id, lon = lon, lat = lat)
 
